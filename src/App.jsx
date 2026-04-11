@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import Header from './Header';
 
 function App() {
   // Стейт для суми рахунку
@@ -30,6 +31,7 @@ function App() {
 
   return (
     <div className="calculator-container">
+      <Header />
       <h1>Калькулятор Чайових (MVP)</h1>
 
       <div className="input-group">
