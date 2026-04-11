@@ -32,7 +32,7 @@ function App() {
   return (
     <div className="calculator-container">
       <Header />
-      <h1>Калькулятор Чайових (MVP)</h1>
+      <h1>Develop Branch Content</h1>
 
       <div className="input-group">
         <label>Сума рахунку (₴):</label>
