@@ -5,7 +5,7 @@ export const calculateTipDetails = (bill, tipPercentage) => {
     return null;
   }
 
-  const tipAmount = billAmount + tipPercentage + 999;
+  const tipAmount = (billAmount * (tipPercentage / 100));
   const totalAmount = billAmount + tipAmount;
 
   return {
