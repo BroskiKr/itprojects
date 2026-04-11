@@ -1,4 +1,5 @@
 # Tip Calculator MVP 📊
+[![CI/CD](https://github.com/BroskiKr/itprojects/actions/workflows/main.yml/badge.svg)](https://github.com/BroskiKr/itprojects/actions/workflows/main.yml)
 
 Простий веб-застосунок на React для швидкого розрахунку чайових. Створений у межах лабораторної роботи з дисципліни "Управління IT-проєктами".
 
@@ -18,3 +19,6 @@
 1. **Клонуйте репозиторій:**
    ```bash
    git clone [https://github.com/BroskiKr/itprojects.git](https://github.com/BroskiKr/itprojects.git)
+
+## 🚀 Production
+[https://itprojects-omega.vercel.app](https://itprojects-omega.vercel.app)
