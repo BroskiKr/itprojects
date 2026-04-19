@@ -1,19 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react' // Додали useEffect для роботи з прапорцями
 import './App.css'
 import Header from './Header';
+import posthog from 'posthog-js';
 
 function App() {
-  // Стейт для суми рахунку
   const [bill, setBill] = useState('');
-  // Стейт для відсотка чайових
   const [tipPercentage, setTipPercentage] = useState(15);
-  // Стейт для результатів розрахунку
   const [results, setResults] = useState(null);
+
+  const [showSplit, setShowSplit] = useState(false);
+
+  // Ініціалізація перевірки Feature Flag
+  useEffect(() => {
+    posthog.onFeatureFlags(() => {
+      if (posthog.isFeatureEnabled('show-split-feature')) {
+        setShowSplit(true);
+      } else {
+        setShowSplit(false);
+      }
+    });
+  }, []);
 
   const calculateTip = () => {
     const billAmount = parseFloat(bill);
-    // Перевірка, чи введене число є коректним
+
+    // Відстеження помилки введення
     if (isNaN(billAmount) || billAmount <= 0) {
+      posthog.capture('calculation_failed', {
+        error_type: 'invalid_input',
+        input_value: bill
+      });
+
       alert("Будь ласка, введіть коректну суму рахунку");
       setResults(null);
       return;
@@ -22,7 +39,14 @@ function App() {
     const tipAmount = billAmount * (tipPercentage / 100);
     const totalAmount = billAmount + tipAmount;
 
-    // Зберігаємо результати, округлені до двох знаків після коми
+    // Відстеження успішного розрахунку
+    posthog.capture('calculation_performed', {
+      bill_amount: billAmount,
+      tip_percentage: parseInt(tipPercentage),
+      total_sum: totalAmount.toFixed(2),
+      app_status: import.meta.env.VITE_APP_STATUS
+    });
+
     setResults({
       tip: tipAmount.toFixed(2),
       total: totalAmount.toFixed(2)
@@ -54,6 +78,22 @@ function App() {
           onChange={(e) => setTipPercentage(e.target.value)}
         />
       </div>
+
+      {/* Відображення блоку за Feature Flag */}
+      {showSplit && (
+        <div className="input-group" style={{
+          border: '1px dashed #2c3e50',
+          padding: '10px',
+          borderRadius: '8px',
+          marginTop: '10px',
+          backgroundColor: 'rgba(44, 62, 80, 0.05)'
+        }}>
+          <label style={{ fontWeight: 'bold' }}>👥 Розділити на компанію?</label>
+          <p style={{ fontSize: '12px', margin: '5px 0 0', color: '#666' }}>
+            Ця функція з'явилася завдяки Feature Flag!
+          </p>
+        </div>
+      )}
 
       <button onClick={calculateTip} className="calc-btn">Розрахувати</button>
 
