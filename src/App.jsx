@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react' // Додали useEffect для роботи з прапорцями
+import { useState, useEffect } from 'react'
 import './App.css'
 import Header from './Header';
 import posthog from 'posthog-js';
+import * as Sentry from "@sentry/react";
 
 function App() {
   const [bill, setBill] = useState('');
@@ -12,6 +13,12 @@ function App() {
 
   // Ініціалізація перевірки Feature Flag
   useEffect(() => {
+    Sentry.setUser({
+      id: "1",
+      email: "student@unidone.app",
+      segment: "university_project"
+    });
+
     posthog.onFeatureFlags(() => {
       if (posthog.isFeatureEnabled('show-split-feature')) {
         setShowSplit(true);
@@ -19,7 +26,13 @@ function App() {
         setShowSplit(false);
       }
     });
+
+    return () => Sentry.setUser(null);
   }, []);
+
+  const throwError = () => {
+    throw new Error("Sentry Test Error: Something went wrong in TipCalc!");
+  };
 
   const calculateTip = () => {
     const billAmount = parseFloat(bill);
@@ -104,6 +117,23 @@ function App() {
           <p>Загальна сума: <strong>{results.total} ₴</strong></p>
         </div>
       )}
+      <div style={{ marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
+        <button
+          onClick={throwError}
+          style={{
+            backgroundColor: '#ff4d4d',
+            color: 'white',
+            fontSize: '11px',
+            padding: '5px 10px',
+            opacity: 0.7,
+            borderRadius: '4px',
+            border: 'none',
+            cursor: 'pointer'
+          }}
+        >
+          ⚠️ Break the world (Test Sentry)
+        </button>
+      </div>
     </div>
   )
 }
