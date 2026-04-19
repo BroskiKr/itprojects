@@ -90,7 +90,7 @@ function App() {
         }}>
           <label style={{ fontWeight: 'bold' }}>👥 Розділити на компанію?</label>
           <p style={{ fontSize: '12px', margin: '5px 0 0', color: '#666' }}>
-            Ця функція з'явилася завдяки Feature Flag!
+            {"Ця функція з'явилася завдяки Feature Flag!"}
           </p>
         </div>
       )}
